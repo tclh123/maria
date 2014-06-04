@@ -129,6 +129,10 @@ class GHTTPServer(object):
         if not match:
             return self.render_not_found()
         cmd, path, reqfile, rpc = match
+
+        # FIXME: DEBUG
+        print "(cmd, path, reqfile, rpc) = (%s, %s, %s, %s)" % (cmd, path, reqfile, rpc)
+
         if not self.check_repo(path):
             return self.render_no_access()
         if not self.check_command(cmd, rpc):
@@ -153,6 +157,7 @@ class GHTTPServer(object):
             if self.rpc == "upload-pack" else "receive_pack"
         self.status = "200"
         self.headers["Content-Type"] = "application/x-git-%s-result" % self.rpc
+
         return getattr(self.git, git_cmd)(self.dir,
                                           {"msg": input},
                                           callback,
